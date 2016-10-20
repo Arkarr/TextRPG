@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -112,8 +113,8 @@ namespace Engine.Utils
                 else
                 {
                     // Token is an operator: pop top two entries  
-                    double d2 = double.Parse(stack.Pop());
-                    double d1 = double.Parse(stack.Pop());
+                    double d2 = double.Parse(stack.Pop(), CultureInfo.InvariantCulture);
+                    double d1 = double.Parse(stack.Pop(), CultureInfo.InvariantCulture);
 
                     double result = token == OPERATOR_ADDITION ? d1 + d2 :
                                     token == OPERATOR_SUBSTRACTION ? d1 - d2 :
@@ -123,11 +124,11 @@ namespace Engine.Utils
 
 
                     // Push result onto stack  
-                    stack.Push(result.ToString());
+                    stack.Push(result.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
-            return double.Parse(stack.Pop());
+            return double.Parse(stack.Pop(), CultureInfo.InvariantCulture);
         }
 
         private static bool isOperator(string token)

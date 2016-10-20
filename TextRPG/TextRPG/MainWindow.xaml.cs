@@ -59,8 +59,23 @@ namespace TextRPG
             str.Decrease(30); // trigger
             Console.WriteLine(str.Current);
             str.Increase(200); // trigger
+            str.Decrease(85);
             Console.WriteLine(str.Current);
 
+            DerivedGameAttribute crit = new DerivedGameAttribute("Critical");
+            crit.DependantAttributes.Add(str);
+            crit.Max = 100;
+            crit.Min = 0;
+            crit.ValueExpression.SimpleText = "$str * 3.552";
+            crit.FormatString = "$cur.1% / $max%";
+            Console.WriteLine(crit.DefaultText);
+
+            Resource hp = new Resource("Health Points");
+            hp.Abbreviation = "HP";
+            hp.Max = 200;
+            hp.Set(87);
+            hp.FormatString = "$cur / $max || $per.1%";
+            Console.WriteLine(hp.DefaultText);
 
         }
     }

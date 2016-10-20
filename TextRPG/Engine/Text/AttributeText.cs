@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,15 +86,28 @@ namespace Engine.Text
 
         public bool TryGetResolvedDouble (out double result)
         {
-            string text = GetResolvedText();
-            return double.TryParse(text, out result);
+            return double.TryParse(GetResolvedText(), out result);
+        }
+
+        public bool TryGetResolvedInteger (out int result)
+        {
+            return int.TryParse(GetResolvedText(), out result);
         }
 
         public double GetResolvedDouble ()
         {
-            string text = GetResolvedText();
             double resolved = 0.0;
-            double.TryParse(text, out resolved);
+            double.TryParse(GetResolvedText(), NumberStyles.Any, CultureInfo.InvariantCulture, out resolved);
+            return resolved;
+        }
+
+        public int GetResolvedInteger()
+        {
+            int resolved = 0;
+            if (int.TryParse(GetResolvedText(), NumberStyles.Any, CultureInfo.InvariantCulture, out resolved))
+            {
+                resolved = (int)Math.Round(GetResolvedDouble(), MidpointRounding.AwayFromZero);
+            }
             return resolved;
         }
 
@@ -129,7 +143,7 @@ namespace Engine.Text
                 resolvedTextNeedCache = false;
             }
 
-            expressionText.SimpleText = resolvedText;
+            expressionText.SimpleText = expressionText.OpeningExpressionDelimiter + resolvedText + expressionText.ClosingExpressionDelimiter;
             return expressionText.GetResolvedText();
         }
 
@@ -142,14 +156,22 @@ namespace Engine.Text
 
             if ((index = resolvedText.IndexOf(identifier)) != -1)
             {
-                int start = resolvedText.IndexOf('.', index) + 1;
-                int end = resolvedText.IndexOf(' ', start) - start;
+                int end = resolvedText.IndexOf(' ', index);
+                int start = resolvedText.IndexOf('.', index, end) + 1;
+                end -= start;
+                
+                string propName = "current";
+                string replace = identifier;
 
-                string propName = resolvedText.Substring(start, end);
+                if (start != 0)
+                {
+                    propName = resolvedText.Substring(start, end);
+                    replace = identifier + "." + propName;
+                }
 
                 object value = attribute.GetType().GetProperty(propName[0].ToString().ToUpper() + propName.Substring(1)).GetValue(attribute);
 
-                resolvedText = resolvedText.Replace(identifier + "." + propName, value.ToString());
+                resolvedText = resolvedText.Replace(replace, value.ToString());
             }
         }
     }

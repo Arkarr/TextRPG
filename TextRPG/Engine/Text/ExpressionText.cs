@@ -15,11 +15,11 @@ namespace Engine.Text
         /// <summary>
         /// Contains the default opening delimiter of the expression ('{' because a expression is by default delimited by '{ ... }'
         /// </summary>
-        public char DEFAULT_OPENING_EXPRESSION_DELIMITER = '{';
+        public const char DEFAULT_OPENING_EXPRESSION_DELIMITER = '{';
         /// <summary>
         /// Contains the default closing delimiter of the expression ('}' because a expression is by default delimited by '{ ... }'
         /// </summary>
-        public char DEFAULT_CLOSING_EXPRESSION_DELIMITER = '}';
+        public const char DEFAULT_CLOSING_EXPRESSION_DELIMITER = '}';
 
         public int DEFAULT_ROUND_DECIMALS = 2;
 

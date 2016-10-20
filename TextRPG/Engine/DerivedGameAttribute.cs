@@ -11,10 +11,17 @@ namespace Engine
     {
         public AttributeText ValueExpression { get; private set; }
 
-        public override double Current
+        public double baseValue = 0.0;
+        public override int Current
         {
-            get { return base.Current + ValueExpression.GetResolvedDouble(); }
-            protected set { base.Current = value; }
+            get { return (int)baseValue + ValueExpression.GetResolvedInteger(); }
+            protected set { baseValue = value; }
+        }
+
+        public double DoubelValue
+        {
+            get { return baseValue + ValueExpression.GetResolvedDouble(); }
+            set { baseValue = value; }
         }
 
         public List<GameAttribute> DependantAttributes
